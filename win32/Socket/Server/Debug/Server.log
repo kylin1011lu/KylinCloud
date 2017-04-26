@@ -1,0 +1,10 @@
+﻿生成启动时间为 2017/4/26 19:27:59。
+     1>项目“D:\GitHub\KylinCloud\win32\Socket\Server\Server.vcxproj”在节点 2 上(Build 个目标)。
+     1>Link:
+         D:\VS\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\GitHub\KylinCloud\win32\Socket\Server\Debug\Server.exe" /INCREMENTAL /NOLOGO ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\GitHub\KylinCloud\win32\Socket\Server\Debug\Server.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\GitHub\KylinCloud\win32\Socket\Server\Debug\Server.lib" /MACHINE:X86 Debug\tcp_server_win.obj
+         Server.vcxproj -> D:\GitHub\KylinCloud\win32\Socket\Server\Debug\Server.exe
+     1>已完成生成项目“D:\GitHub\KylinCloud\win32\Socket\Server\Server.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.41

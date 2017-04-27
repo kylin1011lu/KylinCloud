@@ -12,7 +12,7 @@ int main(int argc,char*argv[])
 {
 	int sock;
 	struct sockaddr_in serv_addr;
-	char message[30];
+	char message[BUF_SIZE];
 	int str_len;
 
 	int idx = 0,read_len = 0;

@@ -4,7 +4,7 @@
 
 void ErrorHandling(char* message);
 
-int main(int argc, char* argv[])
+int tcp_main(int argc, char* argv[])
 {
 	WSADATA wsaData;
 	SOCKET hSocket;

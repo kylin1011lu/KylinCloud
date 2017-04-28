@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <WinSock2.h>
 
-void ErrorHandling(char* message);
+#define BUF_SIZE 1024
+void Echo_ErrorHandling(char* message);
 
-int tcp_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	WSADATA wsaData;
 	SOCKET hServSock, hClntSock;
 	SOCKADDR_IN servAddr, clntAddr;
 
 	int szClntAddr;
-	char message[] = "Hello World!";
+	char message[BUF_SIZE];
 
 	if (argc != 2)
 	{
@@ -20,12 +21,12 @@ int tcp_main(int argc, char* argv[])
 	}
 
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-		ErrorHandling("WSAStartup() error!");
+		Echo_ErrorHandling("WSAStartup() error!");
 
 	hServSock = socket(PF_INET, SOCK_STREAM, 0);
 	if (hServSock == INVALID_SOCKET)
 	{
-		ErrorHandling("socket() error");
+		Echo_ErrorHandling("socket() error");
 	}
 
 	memset(&servAddr, 0, sizeof(servAddr));
@@ -34,23 +35,32 @@ int tcp_main(int argc, char* argv[])
 	servAddr.sin_port = htons(atoi(argv[1]));
 
 	if (bind(hServSock, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("bind() error");
+		Echo_ErrorHandling("bind() error");
 
-	if (listen(hServSock,5) == SOCKET_ERROR)
+	if (listen(hServSock, 5) == SOCKET_ERROR)
 	{
-		ErrorHandling("listen() error");
+		Echo_ErrorHandling("listen() error");
 	}
 
-	szClntAddr = sizeof(clntAddr);
-	hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
-	if (hClntSock == INVALID_SOCKET)
+	int strLen = 0;
+	int i = 0;
+	for (i=0;i<5;i++)
 	{
-		ErrorHandling("accept() error");
+		szClntAddr = sizeof(clntAddr);
+		hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
+		if (hClntSock == INVALID_SOCKET)
+		{
+			Echo_ErrorHandling("accept() error");
+		}
+
+		while ((strLen = recv(hClntSock,message,BUF_SIZE,0))!=0)
+		{
+			send(hClntSock, message, strLen, 0);
+		}
+
+		closesocket(hClntSock);
 	}
 
-	send(hClntSock, message, sizeof(message), 0);
-
-	closesocket(hClntSock);
 	closesocket(hServSock);
 
 	WSACleanup();
@@ -58,7 +68,7 @@ int tcp_main(int argc, char* argv[])
 
 }
 
-void ErrorHandling(char* message)
+void Echo_ErrorHandling(char* message)
 {
 	fputs(message, stderr);
 	fputc('\n', stderr);

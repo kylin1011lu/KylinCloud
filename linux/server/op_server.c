@@ -6,9 +6,9 @@
 #include <sys/socket.h>
 
 #define BUF_SIZE 1024
-#define RLT_SIZE 4
 #define OPSZ 4
 void error_handling(char *message);
+int calculate(int opnum,int opnds[],char oprator);
 
 int main(int argc,char*argv[])
 {
@@ -19,7 +19,9 @@ int main(int argc,char*argv[])
 	struct sockaddr_in clnt_addr;
 	socklen_t clnt_addr_size;
 
-	char opmsg[BUF_SIZE];
+	char opinfo[BUF_SIZE];
+	int result,opnd_cnt,i;
+	int recv_cnt,recv_len;
 
 	if(argc !=2)
 	{
@@ -42,27 +44,27 @@ int main(int argc,char*argv[])
 	if(listen(serv_sock,5) == -1)
 		error_handling("listen() error");
 
-
 	clnt_addr_size = sizeof(clnt_addr);
-	clnt_sock = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
-	if(clnt_sock == -1)
-		error_handling("accept() error");
-	int strLen=0;
-	while(1)
+	int strLen = 0;
+	int i = 0;
+	for(i=0;i<5;++i)
 	{
-		if((strLen=read(clnt_sock,opmsg,BUF_SIZE)) !=0)
+		clnt_sock = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
+		if(clnt_sock == -1)
+			error_handling("accept() error");
+		read(clnt_sock,&opnd_cnt,1);
+		recv_len =0;
+		while((opnd_cnt*OPSZ+1) > recv_len)
 		{
-			int opnd_cnt = (byte)message[0];
-			char *op = message[1+opnd_cnt*OPSZ];
-
-			printf("server count:%d,opertaion:%s\n",opnd_cnt,op);
-
-			int sum = (int)(*(message+1));
+			recv_cnt = read(clnt_sock,&opinfo[recv_len],BUF_SIZE);
+			recv_len+=recv_cnt;
 		}
-		
+		result = calculate(opnd_cnt,(int *)opinfo,opinfo[recv_len-1]);
+
+		write(clnt_sock,(char*)&result,sizeof(result));
+
+		close(clnt_sock);
 	}
-	
-	close(clnt_sock);
 	close(serv_sock);
 	return 0;
 }
@@ -74,3 +76,26 @@ void error_handling(char* message)
 	exit(1);
 }
 
+int calculate(int opnum,int opnds[],char oprator)
+{
+	int result = opnds[0],i;
+	switch(op)
+	{
+		case '+':
+			for (int i = 1; i < opnum; ++i)
+			{
+				result+=opnds[i];
+			}
+		case '-':
+			for (int i = 1; i < opnum; ++i)
+			{
+				result-=opnds[i];
+			}
+		case '*':
+			for (int i = 1; i < opnum; ++i)
+			{
+				result*=opnds[i];
+			}
+	}
+	return result;
+}

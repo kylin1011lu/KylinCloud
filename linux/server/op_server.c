@@ -45,20 +45,20 @@ int main(int argc,char*argv[])
 		error_handling("listen() error");
 
 	clnt_addr_size = sizeof(clnt_addr);
-	int strLen = 0;
-	int i = 0;
 	for(i=0;i<5;++i)
 	{
 		clnt_sock = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
 		if(clnt_sock == -1)
 			error_handling("accept() error");
+		opnd_cnt = 0;
 		read(clnt_sock,&opnd_cnt,1);
 		recv_len =0;
 		while((opnd_cnt*OPSZ+1) > recv_len)
 		{
-			recv_cnt = read(clnt_sock,&opinfo[recv_len],BUF_SIZE);
+			recv_cnt = read(clnt_sock,&opinfo[recv_len],BUF_SIZE-1);
 			recv_len+=recv_cnt;
 		}
+		printf("server opnd_cnt:%d\n",opnd_cnt);
 		result = calculate(opnd_cnt,(int *)opinfo,opinfo[recv_len-1]);
 
 		write(clnt_sock,(char*)&result,sizeof(result));
@@ -79,20 +79,20 @@ void error_handling(char* message)
 int calculate(int opnum,int opnds[],char oprator)
 {
 	int result = opnds[0],i;
-	switch(op)
+	switch(oprator)
 	{
 		case '+':
-			for (int i = 1; i < opnum; ++i)
+			for (i = 1; i < opnum; ++i)
 			{
 				result+=opnds[i];
 			}
 		case '-':
-			for (int i = 1; i < opnum; ++i)
+			for (i = 1; i < opnum; ++i)
 			{
 				result-=opnds[i];
 			}
 		case '*':
-			for (int i = 1; i < opnum; ++i)
+			for (i = 1; i < opnum; ++i)
 			{
 				result*=opnds[i];
 			}

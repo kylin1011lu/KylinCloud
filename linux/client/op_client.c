@@ -41,7 +41,7 @@ int main(int argc,char*argv[])
 
 	for(i=0;i<opnd_cnt;i++)
 	{
-		printf("Operand %d:",i++);
+		printf("Operand %d:",i);
 		scanf("%d",(int*)&opmsg[i*OPSZ+1]);
 	}
 	fgetc(stdin);

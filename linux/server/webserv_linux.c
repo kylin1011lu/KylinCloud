@@ -73,8 +73,8 @@ void * request_handler(void *arg)
 	char ct[15];
 	char file_name[30];
 
-	clnt_read = fopen(clnt_sock,"r");
-	clnt_write = fopen(clnt_sock,"w");
+	clnt_read = fdopen(clnt_sock,"r");
+	clnt_write = fdopen(dup(clnt_sock),"w");
 
 	fgets(req_line,SMALL_BUF,clnt_read);
 
@@ -87,8 +87,8 @@ void * request_handler(void *arg)
 		return NULL;
 	}
 
-
-
+	puts("req_line");
+	puts(req_line);
 
 	strcpy(method,strtok(req_line," /"));
 	strcpy(file_name,strtok(NULL," /"));
@@ -102,6 +102,8 @@ void * request_handler(void *arg)
 		return NULL;
 	}
 
+	puts(ct);
+	puts(file_name);
 	fclose(clnt_read);
 	send_data(clnt_write,ct,file_name);
 	return NULL;
@@ -111,18 +113,21 @@ void send_data(FILE* fp,char*ct,char*file_name)
 {
 	char protocol[] = "HTTP/1.0 200 OK\r\n";
 	char server[] = "Server:linux web server\r\n";
-	char cnt_len[] = "Content-lenght:2048\r\n";
+	char cnt_len[] = "Content-length:2048\r\n";
 	char cnt_type[SMALL_BUF];
 	char buf[BUF_SIZE];
 	FILE* send_file;
 
 	sprintf(cnt_type,"Content-type:%s\r\n\r\n",ct);
+	puts(file_name);
 	send_file = fopen(file_name,"r");
 	if (send_file == NULL)
 	{
+		puts("send file NULL");
 		send_error(fp);
 		return;
 	}
+	puts("open right");
 
 	fputs(protocol,fp);
 	fputs(server,fp);
@@ -131,6 +136,7 @@ void send_data(FILE* fp,char*ct,char*file_name)
 
 	while(fgets(buf,BUF_SIZE,send_file) != NULL)
 	{
+		puts(buf);
 		fputs(buf,fp);
 		fflush(fp);
 	}
@@ -161,12 +167,10 @@ char * content_type(char* file)
 void send_error(FILE* fp)
 {
 	char protocol[] = "HTTP/1.0 400 Bad Requst\r\n";
-	char server[] = "Server:linux web server \r\n";
-	char cnt_len[] = "Content-lenght:2048\r\n";
+	char server[] = "Server:linux Web Server \r\n";
+	char cnt_len[] = "Content-length:2048\r\n";
 	char cnt_type[] = "Content-type:text/html \r\n\r\n";
-	char content[] = "<html><head><title>NETWORK</title></head>"
-					"<body><font size=+5><br>发生错误！查看请求文件名和请求方式！"
-					"</font></body></html>";
+	char content[] = "<html><head><title>NETWORK</title></head><body><font size=+5><br>发生错误！查看请求文件名和请求方式！</font></body></html>";
 
 	fputs(protocol,fp);
 	fputs(server,fp);

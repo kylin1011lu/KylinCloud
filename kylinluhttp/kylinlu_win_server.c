@@ -27,7 +27,7 @@
 //服务器设置socket准备
 int startup(u_short *port);
 //客户端处理线程函数
-void* accept_request(int client);
+void* accept_request(void* client);
 //请求方式未实现进行处理
 void unimplemented(int client);
 //网页未找到处理
@@ -157,7 +157,7 @@ void* accept_request(void* client)
 	{
 		unimplemented(sock_client);
 		close(sock_client);
-		return;
+		return NULL;
 	}
 
 	if (strcasecmp(method, "POST") == 0)
@@ -210,6 +210,7 @@ void* accept_request(void* client)
 		}
 	}
 	close(sock_client);
+	return &0;
 }
 
 /**********************************************************************/

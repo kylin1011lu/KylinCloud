@@ -92,7 +92,7 @@ void *request_handler(void *arg)
 		send_error(write_fp);
 		fclose(read_fp);
 		fclose(write_fp);
-		return;
+		return NULL;
 	}
 	strcpy(method, strtok(req_line, " /"));
 	strcpy(file_name, strtok(NULL, " /"));
@@ -102,10 +102,12 @@ void *request_handler(void *arg)
 		send_error(write_fp);
 		fclose(read_fp);
 		fclose(write_fp);
-		return;
+		return NULL;
 	}
 	fclose(read_fp);
 	send_data(write_fp, ct, file_name);
+
+	return NULL;
 }
 
 void send_data(FILE *fp, char *ct, char *file_name)

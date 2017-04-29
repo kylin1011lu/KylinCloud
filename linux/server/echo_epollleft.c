@@ -5,11 +5,14 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/epoll.h>
+#include <fcntl.h>
+#include <errno.h>
+
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
 void error_handling(char *message);
-
+void setnonblockingmode(int fd);
 int main(int argc,char*argv[])
 {
 	int serv_sock;
@@ -51,6 +54,7 @@ int main(int argc,char*argv[])
 	epfd = epoll_create(EPOLL_SIZE);
 	ep_events = malloc(sizeof(struct epoll_event)*EPOLL_SIZE);
 
+	setnonblockingmode(serv_sock);
 	event.events = EPOLLIN;
 	event.data.fd = serv_sock;
 	epoll_ctl(epfd,EPOLL_CTL_ADD,serv_sock,&event);
@@ -70,24 +74,32 @@ int main(int argc,char*argv[])
 			{
 				adr_sz = sizeof(clnt_addr);
 				clnt_sock = accept(serv_sock,(struct sockaddr*)&clnt_addr,&adr_sz);
-
-				event.events = EPOLLIN;
+				setnonblockingmode(clnt_sock);
+				event.events = EPOLLIN|EPOLLET;
 				event.data.fd = clnt_sock;
 				epoll_ctl(epfd,EPOLL_CTL_ADD,clnt_sock,&event);
 				printf("connected client:%d\n",clnt_sock );
 			}
 			else
 			{
-				str_len = read(ep_events[i].data.fd,buf,BUF_SIZE);
-				if (str_len == 0)
+				while(1)
 				{
-					epoll_ctl(epfd,EPOLL_CTL_DEL,ep_events[i].data.fd,NULL);
-					close(ep_events[i].data.fd);
-					printf("close client:%d\n", ep_events[i].data.fd);
-				}
-				else
-				{
-					write(ep_events[i].data.fd,buf,str_len);
+					str_len = read(ep_events[i].data.fd,buf,BUF_SIZE);
+					if (str_len == 0)
+					{
+						epoll_ctl(epfd,EPOLL_CTL_DEL,ep_events[i].data.fd,NULL);
+						close(ep_events[i].data.fd);
+						printf("close client:%d\n", ep_events[i].data.fd);
+					}
+					else if(str_len < 0)
+					{
+						if(errno == EAGAIN)
+							break;
+					}
+					else
+					{
+						write(ep_events[i].data.fd,buf,str_len);
+					}
 				}
 			}
 		}
@@ -103,4 +115,10 @@ void error_handling(char* message)
 	fputs(message,stderr);
 	fputc('\n',stderr);
 	exit(1);
+}
+
+void setnonblockingmode(int fd)
+{
+	int flag = fcntl(fd,F_GETFL,0);
+	fcntl(fd,F_SETFL,flag|O_NONBLOCK);
 }

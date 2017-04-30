@@ -78,7 +78,7 @@ int main(int argc,char*argv)
 		if (client_sock == -1)
 			error_die("accept");
 
-		if (pthread_create(&newthread , NULL, accept_request, (void)&client_sock) != 0)
+		if (pthread_create(&newthread , NULL, accept_request, &client_sock) != 0)
 			perror("pthread_create");
 
 		pthread_detach(newthread);
@@ -210,7 +210,7 @@ void* accept_request(void* client)
 		}
 	}
 	close(sock_client);
-	return &0;
+	return 0;
 }
 
 /**********************************************************************/

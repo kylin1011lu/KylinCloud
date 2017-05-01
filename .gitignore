@@ -52,7 +52,7 @@ Mkfile.old
 dkms.conf
 
 #Myconfigurations
-bin
 *.opensdf
+bin
 Debug
 

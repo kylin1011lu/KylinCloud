@@ -4,10 +4,14 @@ int main()
 {
 	int i=0;
 	
-	while(i++ < 6)
-	{
-		printf("%d\n",i);
-	}
+	int ref = 0;
+	flush(&ref);
 
+	printf("flush %d\n", ref);
 	return 0;
+}
+
+void flush(int *ref)
+{
+	*ref = 10;
 }

@@ -62,6 +62,8 @@ void accept_request(int client)
  char *query_string = NULL;
 
  numchars = get_line(client, buf, sizeof(buf));
+
+ puts(buf);
  i = 0; j = 0;
  while (!ISspace(buf[j]) && (i < sizeof(method) - 1))
  {

@@ -49,7 +49,7 @@ int get_line(int sock, char *buf, int size);
 //错误输出
 void error_die(const char *sc);
 
-int main(int argc,char*argv)
+int main(int argc,char*argv[])
 {
 	int server_sock = -1;
 	int client_sock = -1;
@@ -71,7 +71,7 @@ int main(int argc,char*argv)
 	 
  	server_sock = startup(&port);
 
-	int client_name_len = sizeof(client_name);
+	socklen_t client_name_len = sizeof(client_name);
 	while (1)
 	{
 		client_sock = accept(server_sock,(struct sockaddr *)&client_name,&client_name_len);
@@ -170,7 +170,8 @@ void* accept_request(void* client)
 	while (!ISspace(buf[j]) && (i < sizeof(url) - 1) && (j < sizeof(buf)))
 	{
 		url[i] = buf[j];
-		i++; j++;
+		i++; 
+		j++;
 	}
 	url[i] = '\0';
 
@@ -188,8 +189,10 @@ void* accept_request(void* client)
 	}
 
 	sprintf(path, "htdocs%s", url);
+	//localhost 默认访问
 	if (path[strlen(path) - 1] == '/')
 		strcat(path, "index.html");
+
 	if (stat(path, &st) == -1) 
 	{
 		while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */
@@ -200,14 +203,14 @@ void* accept_request(void* client)
 	{
 		if ((st.st_mode & S_IFMT) == S_IFDIR)
 			strcat(path, "/index.html");
+
 		if ((st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH))
-		{
 			cgi = 1;
-			if (!cgi)
-				serve_file(sock_client, path);
-			else
-				execute_cgi(sock_client, path, method, query_string);			
-		}
+
+		if (!cgi)
+			serve_file(sock_client, path);
+		else
+			execute_cgi(sock_client, path, method, query_string);			
 	}
 	close(sock_client);
 	return 0;
@@ -230,11 +233,11 @@ void unimplemented(int client)
 	send(client, buf, strlen(buf), 0);
 	sprintf(buf, "\r\n");
 	send(client, buf, strlen(buf), 0);
-	sprintf(buf, "<HTML><HEAD><TITLE>该请求方式服务器未实现\r\n");
+	sprintf(buf, "<HTML><HEAD><TITLE>Method Not Implemented\r\n");
 	send(client, buf, strlen(buf), 0);
 	sprintf(buf, "</TITLE></HEAD>\r\n");
 	send(client, buf, strlen(buf), 0);
-	sprintf(buf, "<BODY><P>HTTP请求暂不支持\r\n");
+	sprintf(buf, "<BODY><P>HTTP request method not supported.\r\n");
 	send(client, buf, strlen(buf), 0);
 	sprintf(buf, "</BODY></HTML>\r\n");
 	send(client, buf, strlen(buf), 0);
@@ -338,7 +341,8 @@ void serve_file(int client, const char *filename)
 	int numchars = 1;
 	char buf[1024];
 
-	buf[0] = 'A'; buf[1] = '\0';
+	buf[0] = 'A'; 
+	buf[1] = '\0';
 	while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */
 		numchars = get_line(client, buf, sizeof(buf));
 

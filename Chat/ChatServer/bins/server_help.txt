@@ -1,0 +1,35 @@
+服务器命令帮助文件
+
+help 
+	获取服务器可执行命令帮助文件
+clear
+	清屏
+
+l	[options]
+
+	-u	显示当前在线的用户
+	-i	显示当前用户会话链表
+	-g	查看log文件
+
+h	[options]
+		
+		屏蔽心跳信息显示	
+	-on	开启客户端心跳包显示
+		
+
+b	[options]
+	
+	-name	关闭用户(name)对应的连接
+
+clean
+	清空日志文件
+
+$	[options]
+	
+	cmd	执行系统默认cmd命令
+
+shutdown
+	
+	关闭服务器,释放所有链表
+
+

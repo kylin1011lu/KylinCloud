@@ -1,0 +1,24 @@
+客户端云系统操作命令帮助文件
+
+help 
+		获取客户端云系统可执行的操作命令帮助文件
+exit
+		退出命令模式
+
+clear
+		清屏
+
+$		[options]
+	
+		cmd	执行本地系统默认cmd命令
+cmd 
+		在云端系统执行cmd命令
+
+download	[options]
+		
+		filename	从云端下载filename文件到客户端文件夹
+
+upload		[options]
+
+		filename	从本地上传filename文件到云端网盘
+

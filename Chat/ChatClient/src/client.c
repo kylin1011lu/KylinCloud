@@ -85,7 +85,7 @@ int main(int argc,char **argv)
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
-	if((err = pthread_create(&thread,&attr,threadread,(void *)sockfd)) != 0)
+	if((err = pthread_create(&thread,&attr,threadread,(void *)&sockfd)) != 0)
 	{
 		printf("pthread create error!\n");
 	}

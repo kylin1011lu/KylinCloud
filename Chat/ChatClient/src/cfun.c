@@ -44,7 +44,7 @@ void *threadread(void *argc)
 			printf(RED"与服务器连接断开!"NONE);
 			fflush(stdout);	
 			printf("\n");	
-			exit(-1);
+			return NULL;
 		}
 		if(msg.msg_type == TYPE_CHAT && chatflag == 1)
 		{
@@ -59,7 +59,7 @@ void *threadread(void *argc)
 	}
 	
 
-	return (void *)0;
+	return NULL;
 }
 
 /*

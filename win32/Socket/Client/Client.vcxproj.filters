@@ -18,5 +18,8 @@
     <ClCompile Include="tcp_client_win.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="echo_client_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

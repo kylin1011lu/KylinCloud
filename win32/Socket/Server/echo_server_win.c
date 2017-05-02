@@ -5,7 +5,7 @@
 #define BUF_SIZE 1024
 void Echo_ErrorHandling(char* message);
 
-int main(int argc, char* argv[])
+int echo_main(int argc, char* argv[])
 {
 	WSADATA wsaData;
 	SOCKET hServSock, hClntSock;

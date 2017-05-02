@@ -53,6 +53,9 @@ dkms.conf
 
 #Myconfigurations
 *.opensdf
+chatserver
+chatclient
+log.txt
 bin
 Debug
 

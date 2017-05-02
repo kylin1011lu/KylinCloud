@@ -3,8 +3,8 @@ DEBUG:=debug
 SRC:=src
 
 
-client:$(DEBUG)/cfun.o $(DEBUG)/client.o
-	gcc -o $(BIN)/client $(DEBUG)/cfun.o $(DEBUG)/client.o -W -Wall -lpthread
+chatclient:$(DEBUG)/cfun.o $(DEBUG)/client.o
+	gcc -o $(BIN)/chatclient $(DEBUG)/cfun.o $(DEBUG)/client.o -W -Wall -lpthread
 $(DEBUG)/cfun.o:$(SRC)/cfun.c | $(DEBUG)
 	gcc -o $(DEBUG)/cfun.o -c $(SRC)/cfun.c -W -Wall -lpthread
 $(DEBUG)/client.o:$(SRC)/client.c | $(DEBUG)
@@ -17,4 +17,4 @@ $(DEBUG):
 .PHONY:clean
 clean:
 	rm -f $(DEBUG)/*.o 
-	rm -f $(BIN)/client
+	rm -f $(BIN)/chatclient

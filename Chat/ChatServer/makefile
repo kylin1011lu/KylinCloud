@@ -3,8 +3,8 @@ BIN:=bins
 DEBUG:=debug
 SRC:=src
 
-server:$(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o
-	gcc -o $(BIN)/server $(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o -W -Wall -lpthread
+chatserver:$(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o
+	gcc -o $(BIN)/chatserver $(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o -W -Wall -lpthread
 $(DEBUG)/link.o:$(SRC)/link.c |$(DEBUG)
 	gcc -o $(DEBUG)/link.o -c $(SRC)/link.c -W -Wall -lpthread
 $(DEBUG)/mythread.o:$(SRC)/mythread.c |$(DEBUG)
@@ -18,4 +18,4 @@ $(DEBUG):
 .PHONY:clean
 clean:
 	rm -f $(DEBUG)/*.o  
-	rm -f $(BIN)/server
+	rm -f $(BIN)/chatserver

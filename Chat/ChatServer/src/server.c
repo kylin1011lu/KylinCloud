@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <termios.h>
 #include <unistd.h>
+#include <signal.h>
 #include "mythread.h"
 #include "link.h"
 #include "dis.h"
@@ -28,11 +29,26 @@ COL *clientol_head;
 INFO *info_head;
 int heart_flag; //是否显示心跳信息开关
 
+//信号处理函数
+void sig_handle(int signo)
+{
+	if(signo == SIGHUB)
+	{
+
+	}
+}
+
 //启动路径
 char PRE_PATH[56] = {0};
 
 int main(int argc,char **argv)
 {
+
+	if(signal(SIGHUB,sig_handle) == SIG_ERR)
+	{
+		printf("signal failure!\n");
+		exit(-1);
+	}
 
 	char buf[50] = {0};
 	getcwd(buf,sizeof(buf));

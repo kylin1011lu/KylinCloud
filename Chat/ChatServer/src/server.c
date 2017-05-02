@@ -30,9 +30,9 @@ INFO *info_head;
 int heart_flag; //是否显示心跳信息开关
 
 //信号处理函数
-void sig_handle(int signo)
+void sighub_handle(int signo)
 {
-	if(signo == SIGHUB)
+	if(signo == SIGHUP)
 	{
 
 	}
@@ -44,7 +44,7 @@ char PRE_PATH[56] = {0};
 int main(int argc,char **argv)
 {
 
-	if(signal(SIGHUB,sig_handle) == SIG_ERR)
+	if(signal(SIGHUP,sighub_handle) == SIG_ERR)
 	{
 		printf("signal failure!\n");
 		exit(-1);

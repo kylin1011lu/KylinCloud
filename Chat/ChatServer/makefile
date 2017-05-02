@@ -1,17 +1,19 @@
 
-BIN:=bin
+BIN:=bins
 DEBUG:=debug
 SRC:=src
 
-server:link.o mythread.o server.o
+server:$(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o
 	gcc -o $(BIN)/server $(DEBUG)/link.o $(DEBUG)/mythread.o $(DEBUG)/server.o -W -Wall -lpthread
-link.o:$(SRC)/link.c
+$(DEBUG)/link.o:$(SRC)/link.c |$(DEBUG)
 	gcc -o $(DEBUG)/link.o -c $(SRC)/link.c -W -Wall -lpthread
-mythread.o:$(SRC)/mythread.c
+$(DEBUG)/mythread.o:$(SRC)/mythread.c |$(DEBUG)
 	gcc -o $(DEBUG)/mythread.o -c $(SRC)/mythread.c -W -Wall -lpthread
-server.o:$(SRC)/server.c
+$(DEBUG)/server.o:$(SRC)/server.c |$(DEBUG)
 	gcc -o $(DEBUG)/server.o -c $(SRC)/server.c -W -Wall -lpthread
 
+$(DEBUG):
+	mkdir $@
 
 .PHONY:clean
 clean:

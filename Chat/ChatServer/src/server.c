@@ -40,9 +40,9 @@ int main(int argc,char **argv)
 
 	puts(argv[0]);
 
-	if (strstr(argv[0],"bin") != NULL)
+	if (strstr(argv[0],"bins") != NULL)
 	{
-		strcpy(PRE_PATH,"bin/");
+		strcpy(PRE_PATH,"bins/");
 	}
 
 	int sockfd = -1;
@@ -153,19 +153,15 @@ int main(int argc,char **argv)
 	fgets(buf_ip,sizeof(buf_ip),fp);
 	fgets(buf_port,sizeof(buf_port),fp);
 
-	int i = 2;
-	char *b = " ";
-	ip = strtok(buf_ip,b);
-	while(i--)
-	{
-		ip=strtok(NULL,b);
-	}
-	char *iport = strtok(buf_port,b);
-	i = 2;
-	while(i--)
-	{
-		iport=strtok(NULL,b);
-	}
+	char *b = ":";
+
+	strtok(buf_ip,b);
+	ip = strtok(NULL,b);
+
+	strtok(buf_port,b);
+	char * iport=strtok(NULL,b);
+
+	ip = strtok(ip,"\"");	
 
 	*port = atoi(iport);
 	printf("\033[2J""\033[1;1H""配置文件加载中....\n");

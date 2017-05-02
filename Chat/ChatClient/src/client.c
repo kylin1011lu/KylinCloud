@@ -39,9 +39,9 @@ int main(int argc,char **argv)
 	char ip[56] = {0}; //服务器域名
 	ushort port = 0;
 
-	if (strstr(argv[0],"bin") != NULL)
+	if (strstr(argv[0],"bins") != NULL)
 	{
-		strcpy(PRE_PATH,"bin/");
+		strcpy(PRE_PATH,"bins/");
 	}
 
 	//信号注册
@@ -161,24 +161,20 @@ void sig_handle(int signo)
 	char buf_port[100] = {0};
 
 	char *domain = NULL;
+	char *iport = NULL;
 
 	fgets(buf_domain,sizeof(buf_domain),fp);
 	fgets(buf_port,sizeof(buf_port),fp);
 
-	int i = 2;
-	char *b = " ";
-	domain = strtok(buf_domain,b);
-	while(i--)
-	{
-		domain=strtok(NULL,b);
-	}
-	char *iport = strtok(buf_port,b);
-	i = 2;
-	while(i--)
-	{
-		iport=strtok(NULL,b);
-	}
-	puts(domain);
+	char *b = ":";
+
+	strtok(buf_domain,b);
+	domain = strtok(NULL,b);
+
+	strtok(buf_port,b);
+	iport=strtok(NULL,b);	
+
+	domain = strtok(domain,"\"");
 	struct hostent *host;
 	host = gethostbyname(domain);
 	if(!host)
@@ -195,7 +191,7 @@ void sig_handle(int signo)
 	// for(i=0;host->h_addr_list[i];i++)
 	// 	printf("IP addr%d:%s\n",i+1,inet_ntoa(*(struct in_addr*)host->h_addr_list[i]));
 
-	if (host->h_addr_list == NULL)
+	if (host->h_addr_list[0] == NULL)
 	{
 		perror("ip parse error!\n");
 		return -1;
@@ -205,7 +201,7 @@ void sig_handle(int signo)
 
 	*port = (ushort)atoi(iport);
 	printf("\033[2J""\033[1;1H""服务器配置文件加载中....\n");
-	printf("domain加载成功%s",domain);
+	printf("domain加载成功%s\n",domain);
 	printf("ip加载成功%s\n", ip);
 	printf("port加载成功%d\n",*port);
 

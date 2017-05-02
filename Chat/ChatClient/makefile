@@ -1,13 +1,18 @@
-BIN:=bin
+BIN:=bins
 DEBUG:=debug
 SRC:=src
 
-client:cfun.o client.o
+
+client:$(DEBUG)/cfun.o $(DEBUG)/client.o
 	gcc -o $(BIN)/client $(DEBUG)/cfun.o $(DEBUG)/client.o -W -Wall -lpthread
-cfun.o:$(SRC)/cfun.c
+$(DEBUG)/cfun.o:$(SRC)/cfun.c | $(DEBUG)
 	gcc -o $(DEBUG)/cfun.o -c $(SRC)/cfun.c -W -Wall -lpthread
-client.o:$(SRC)/client.c
+$(DEBUG)/client.o:$(SRC)/client.c | $(DEBUG)
 	gcc -o $(DEBUG)/client.o -c $(SRC)/client.c -W -Wall -lpthread
+
+
+$(DEBUG):
+	mkdir $@
 
 .PHONY:clean
 clean:

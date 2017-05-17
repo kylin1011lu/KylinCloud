@@ -36,6 +36,7 @@ LIBS += \
 CPPFLAGS += \
 	-W \
 	-Wall \
+	-g \
 	-std=c++11
 
 OBJS_DIR = objs

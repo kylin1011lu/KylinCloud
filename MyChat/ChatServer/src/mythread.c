@@ -109,10 +109,10 @@ void *main_thread(void *argc)
 		perror("pipe error!\n");
 	}	
 
-	ret = update_check(lisfd);
+	//ret = update_check(lisfd);
 	
-	if(ret == -1)
-		mywrite(TYPE_WEL," "," "," ",lisfd);
+	//if(ret == -1)
+	//	mywrite(TYPE_WEL," "," "," ",lisfd);
 
 	pthread_t dad_thread = pthread_self(); //获取当前线程ID传入子线程中
 	TN th_na;
@@ -124,18 +124,18 @@ void *main_thread(void *argc)
 	int err = -1;
 	pthread_t heartthread;
 	pthread_attr_t attr;
-	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
-	if((err = pthread_create(&heartthread,&attr,heart,(void *)&th_na)) != 0)
+	//pthread_attr_init(&attr);
+	//pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
+	//if((err = pthread_create(&heartthread,&attr,heart,(void *)&th_na)) != 0)
 	{
-		printf("pthread create error!\n");
+	//	printf("pthread create error!\n");
 	}
-	pthread_attr_destroy(&attr);
+	//pthread_attr_destroy(&attr);
 	
 	do
 	{
 		memset(&msg,0,sizeof(msg));
-		myread(&msg,lisfd);
+		int size = myread(&msg,lisfd);
 		//非心跳包写入日志
 		if(msg.msg_type != TYPE_HEART)
 			log_dis(msg,lisfd,name);
@@ -194,7 +194,7 @@ void *main_thread(void *argc)
 		}
 	}while(1);
 
-
+	printf("main_thread eixit:%d\n", pthread_self());
 	pthread_exit(NULL);
 }
 
@@ -624,6 +624,10 @@ int myread(struct msg *msg,int lisfd)
 	MY_MSG_HEAD msghead;
 	memset(&msghead,0,sizeof(MY_MSG_HEAD));
 	size = read(lisfd,&msghead,sizeof(MY_MSG_HEAD));
+	if (size <=0)
+	{
+		return 0;
+	}
 
 	char *data = new char[msghead.size - sizeof(MY_MSG_HEAD)];
 	read(lisfd,data,msghead.size - sizeof(MY_MSG_HEAD));
